@@ -1,4 +1,23 @@
 <script setup lang="ts">
+import Swal from "sweetalert2"
+async function hundleSubmit(data) {
+  try {
+    const res = await $fetch('/api/user', {
+      method: "POST",
+      body: data
+    })
+    console.log(res)
+  } catch (error) {
+    console.log(error.response)
+    Swal.fire({
+      title: 'Error!',
+      text: error.response?._data?.message,
+      icon: 'error',
+      confirmButtonText: 'Close'
+    })
+
+  }
+}
 </script>
 
 <template>
@@ -11,14 +30,12 @@
         <p class="text-[#F4F4F5]">Already registered? <NuxtLink class="text-[#FFAC00]" to="login">Log in
           </NuxtLink> Sign up </p>
       </div>
-      <form action="" class="flex flex-col w-[20rem] mt-2">
-        <Input label="E-mail adress" placeholder="you@example.com" />
-        <Input label="Password" placeholder="***************" />
-        <mainButton title="Sign Up" />
-      </form>
+
+      <Form buttonText="Sign Up" @submitForm="hundleSubmit" />
+
     </nav>
     <main class="w-full hidden lg:flex  items-center bg-sidebar ">
-      <div class="flex flex-col gap-4  items-center m-auto w-[30rem] h-fit  ">
+      <div class="flex flex-col gap-4  items-center m-auto w-[30rem] h-fit text-text  ">
         <p class="w-[30rem]">
           October 15th, 2024
         </p>

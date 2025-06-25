@@ -14,16 +14,16 @@ const fontSize = ref(40)
 
     </nav>
     <main class="w-full flex flex-col  items-center bg-bg h-screen">
-      <div class="w-full flex justify-between p-8">
+      <div class="w-full flex justify-between p-8 ">
         <button class="flex gap-3 items-center hover:cursor-pointer" @click="click">
           <img src="../assets/Group 13.png" alt="add new note" class="w-4 h-4">
-          <p>New note</p>
+          <p class="text-text">New note</p>
 
         </button>
         <button @click="click"><i
             class="fa-solid fa-trash text-[#6D6D73] hover:cursor-pointer !hover:bg-[#6D6D73]"></i></button>
       </div>
-      <textarea name="note" id="note" class="flex flex-col  gap-4  p-22  m-auto w-full  h-screen   ">
+      <textarea name="note" id="note" class="flex flex-col text-text  gap-4  p-22  m-auto w-full  h-screen   ">
         October 15th, 2024
 
         Finally took that leap and signed up for pottery classes! The studio has this amazing

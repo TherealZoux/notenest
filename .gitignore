@@ -24,3 +24,5 @@ logs
 !.env.example
 
 /generated/prisma
+
+/lib/generated/prisma
