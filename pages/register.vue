@@ -1,21 +1,34 @@
 <script setup lang="ts">
 import Swal from "sweetalert2"
+
+
 async function hundleSubmit(data) {
+
   try {
     const res = await $fetch('/api/user', {
       method: "POST",
       body: data
     })
-    console.log(res)
-  } catch (error) {
-    console.log(error.response)
+
+    const { isConfirmed } = await Swal.fire({
+      title: 'Success',
+      text: "Account created successfully!",
+      icon: 'success',
+      confirmButtonText: 'Ok'
+    })
+
+    if (isConfirmed) {
+      navigateTo('/login')
+    }
+
+  }
+  catch (error) {
     Swal.fire({
       title: 'Error!',
       text: error.response?._data?.message,
       icon: 'error',
       confirmButtonText: 'Close'
     })
-
   }
 }
 </script>
@@ -23,10 +36,10 @@ async function hundleSubmit(data) {
 <template>
   <section class="flex">
     <nav
-      class="lg:w-[35rem] w-[100%] h-[100vh] flex justify-center flex-col gap-4 lg:p-20 items-center lg:items-start bg-bg">
+      class="lg:w-[45rem] w-[100%] h-[100vh] flex justify-center flex-col gap-4 lg:p-20 items-center lg:items-start bg-bg">
       <Logo width="1.5" />
       <div>
-        <h3 class="text-[1.5rem] mb-1">Sign up for a free account</h3>
+        <h3 class="text-[2rem] mb-1">Sign up for a free account</h3>
         <p class="text-[#F4F4F5]">Already registered? <NuxtLink class="text-[#FFAC00]" to="login">Log in
           </NuxtLink> Sign up </p>
       </div>

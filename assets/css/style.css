@@ -54,8 +54,9 @@ input::placeholder {
 
 
 
-p {
-  font-size: 16px;
+p,
+label {
+  font-size: 18px;
 }
 
 .log-btn:hover i {

@@ -1,3 +1,4 @@
+
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import validator from 'validator';
@@ -7,8 +8,6 @@ const prisma = new PrismaClient()
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event)
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(body.password, salt)
 
     // email validation
     if (!validator.isEmail(body.email)) {
@@ -27,14 +26,21 @@ export default defineEventHandler(async (event) => {
     }
 
     // prisma client query
-    const user = await prisma.user.create({
-      data: {
+    const user = await prisma.user.findUnique({
+      where: {
         email: body.email,
-        password: hashedPassword,
-        salt: salt
       }
     })
+    const isValid = await bcrypt.compare(body.password, user.password)
+    console.log("ISVALID: ");
 
+    console.log(isValid);
+    if (!isValid) {
+      throw createError({
+        statusCode: 400,
+        message: "Email or password is wrrong"
+      })
+    }
     // jwt init
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET)
     setCookie(event, "nestnoteJWT", token)

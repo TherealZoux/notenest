@@ -1,16 +1,44 @@
 <script setup lang="ts">
 
+import Swal from "sweetalert2"
 
 
-const hundleSubmit = (data) => {
-  console.log(data)
+async function hundleSubmit(data) {
+
+  try {
+    const res = await $fetch('/api/login', {
+      method: "POST",
+      body: data
+    })
+
+    const { isConfirmed } = await Swal.fire({
+      title: 'Success',
+      text: "Logged in successfully!",
+      icon: 'success',
+      confirmButtonText: 'Ok'
+    })
+
+    if (isConfirmed) {
+      navigateTo('/')
+    }
+
+  }
+  catch (error) {
+    Swal.fire({
+      title: 'Error!',
+      text: error.response?._data?.message,
+      icon: 'error',
+      confirmButtonText: 'Close'
+    })
+  }
 }
+
 </script>
 
 <template>
   <section class="flex">
     <nav class="
-      lg:w-[35rem] 
+      lg:w-[45rem] 
       w-full 
       h-screen 
       bg-sidebar 
@@ -25,8 +53,8 @@ const hundleSubmit = (data) => {
       <Logo width="1.5" />
 
       <div>
-        <h3 class="text-[1.5rem] mb-1">Log in to your account</h3>
-        <p class="text-[#F4F4F5]">Don't have an account? <NuxtLink class="text-[#FFAC00]" to="register">Sign up
+        <h3 class="text-[2rem] mb-1">Log in to your account</h3>
+        <p class="text-[#F4F4F5] ">Don't have an account? <NuxtLink class="text-[#FFAC00]" to="register">Sign up
           </NuxtLink> for one.</p>
       </div>
 
