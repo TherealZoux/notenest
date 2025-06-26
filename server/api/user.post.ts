@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import validator from 'validator';
 import jwt from 'jsonwebtoken'
+
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
