@@ -73,8 +73,11 @@ onMounted(async () => {
           <i class="fa-solid fa-trash text-[#6D6D73] hover:cursor-pointer !hover:bg-[#6D6D73]"></i>
         </button>
       </div>
-      <textarea name="note" id="note" v-model="updatedText" @input="debouncedFn"
-        class="text-text w-[50%] mt-16 h-[50%]">{{ selectedNote.text }}</textarea>
+      <div class="mt-16 w-[50%] h-[100%] flex m-auto flex-col items-start  justify-center gap-4">
+        <span>{{ new Date(selectedNote.updatedAt).toLocaleDateString() }}</span>
+        <textarea name="note" id="note" v-model="updatedText" @input="debouncedFn"
+          class="text-text w-full focus:outline-none resize-none h-[100%]">{{ selectedNote.text }}</textarea>
+      </div>
     </main>
   </section>
 </template>
@@ -85,6 +88,9 @@ textarea {
   word-break: break-word;
   line-height: 1.6;
   resize: none;
+  scrollbar-color: #2c2c32f7 transparent;
+  scrollbar-width: thin;
+
 }
 
 textarea:focus {
