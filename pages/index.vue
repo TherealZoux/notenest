@@ -13,13 +13,11 @@ const notes = ref([])
 const selectedNote = ref({})
 const updatedText = ref('')
 const textarea = ref(null)
-
+const toggleNav = ref(true)
 
 function setNote(note) {
-  console.log(note)
   selectedNote.value = note
   updatedText.value = note.text
-  console.log(updateText.value)
 }
 
 async function updateText() {
@@ -36,11 +34,32 @@ async function updateText() {
   }
 }
 
+async function deleteNote() {
+  try {
+    const res = await $fetch(`/api/notes/${selectedNote.value.id}`, {
+      method: "DELETE"
+    })
+    notes.value = await $fetch('/api/notes')
+    selectedNote.value = todaysNotes.value[0]
+  } catch (error) {
+
+  }
+}
+
 async function crateNote() {
   const newNote = await $fetch('/api/notes', {
     method: "POST",
   })
   notes.value.unshift(newNote)
+  selectedNote.value = newNote
+  updatedText.value = newNote.text
+  //textarea.value.focus()
+}
+
+function logOut() {
+  const jwtCookie = useCookie("nestnoteJWT")
+  jwtCookie.value = null
+  navigateTo('/login')
 }
 
 const debouncedFn = useDebounceFn(() => {
@@ -95,8 +114,15 @@ onMounted(async () => {
   <section class="flex overflow-hidden">
     <!-- Sidebar -->
     <nav
-      class="lg:w-[30rem] hidden lg:flex w-full h-screen bg-sidebar flex justify-start flex-col gap-4 lg:p-8 items-center lg:items-start overflow-y-auto">
-      <Logo width="1.5" />
+      class="lg:w-[30rem] flex w-full h-screen bg-sidebar justify-start flex-col gap-4 p-8 items-center items-start overflow-y-auto absolute lg:relative"
+      v-if="toggleNav">
+      <div class="flex justify-between w-full">
+        <Logo width="1.5" />
+        <button class="lg:hidden cursor-pointer bg-[#1f1f1f66] px-4 rounded lg:hidden" @click="toggleNav = !toggleNav">
+          <i class="fa-solid fa-xmark text-placeholder" v-if="toggleNav"></i>
+        </button>
+
+      </div>
       <!--today notes -->
       <span class="mt-8" v-if="todaysNotes.length > 0">Today</span>
       <div class="container flex flex-col gap-1 w-full" v-for="note in todaysNotes" :key="note.createdAt"
@@ -139,16 +165,20 @@ onMounted(async () => {
     <!-- Main content area -->
     <main class="w-full flex flex-col items-center bg-bg h-screen overflow-y-auto">
       <div class="w-full flex justify-between p-8">
+        <button class="lg:hidden cursor-pointer" @click="toggleNav = !toggleNav">
+          <i class="fa-solid fa-bars text-placeholder" v-if="!toggleNav"></i>
+          <i class="fa-solid fa-xmark text-placeholder" v-if="toggleNav"></i>
+        </button>
         <button class="flex gap-3 items-center hover:cursor-pointer" @click="crateNote">
           <img src="../assets/Group 13.png" alt="add new note" class="w-4 h-4" />
           <p class="text-text">New note</p>
         </button>
-        <button @click="click">
+        <button @click="deleteNote">
           <i class="fa-solid fa-trash text-[#6D6D73] hover:cursor-pointer !hover:bg-[#6D6D73]"></i>
         </button>
       </div>
       <div class="mt-16 w-[50%] h-[100%] flex m-auto flex-col items-start  justify-center gap-4">
-        <span>{{ new Date(selectedNote.updatedAt).toLocaleDateString() }}</span>
+        <span v-if="selectedNote.updatedAt">{{ new Date(selectedNote.updatedAt).toLocaleDateString() }}</span>
 
         <textarea ref="textarea" v-model="updatedText" name="note" id="note"
           class="text-[#D4D4D4] my-4 font-playfair w-full bg-transparent focus:outline-none resize-none flex-grow"
@@ -160,6 +190,11 @@ onMounted(async () => {
           ">
         </textarea>
 
+      </div>
+      <div class="h-[5rem] text-text flex justify-center items-start ml-auto gap-2 mr-8">
+        <button class="text-lg hover:cursor-pointer" @click="logOut"> <i
+            class="fa-solid fa-right-from-bracket text-placeholder text-lg"></i>
+          Log out</button>
       </div>
     </main>
   </section>

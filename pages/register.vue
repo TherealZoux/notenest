@@ -31,6 +31,15 @@ async function hundleSubmit(data) {
     })
   }
 }
+
+
+onBeforeMount(() => {
+  const token = useCookie("nestnoteJWT")
+  if (token.value) {
+    navigateTo('/')
+  }
+})
+
 </script>
 
 <template>

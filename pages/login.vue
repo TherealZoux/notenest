@@ -2,7 +2,6 @@
 
 import Swal from "sweetalert2"
 
-
 async function hundleSubmit(data) {
 
   try {
@@ -33,6 +32,12 @@ async function hundleSubmit(data) {
   }
 }
 
+onBeforeMount(() => {
+  const token = useCookie("nestnoteJWT")
+  if (token.value) {
+    navigateTo('/')
+  }
+})
 </script>
 
 <template>
