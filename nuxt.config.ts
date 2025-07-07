@@ -4,7 +4,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     '@nuxtjs/tailwindcss',
-    '@pinia/nuxt',
     '@prisma/nuxt',
     "@vueuse/nuxt",
   ],
@@ -12,6 +11,12 @@ export default defineNuxtConfig({
   build: {
     transpile: ['primevue']
   },
-
+  vite: {
+    resolve: {
+      alias: {
+        '.prisma/client/index-browser': './node_modules/.prisma/client/index-browser.js',
+      },
+    }
+  }
 
 })
